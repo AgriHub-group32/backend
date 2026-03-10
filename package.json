@@ -1,0 +1,36 @@
+{
+  "name": "agri-connect-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/main.js",
+    "start:dev": "ts-node src/main.ts",
+    "start:debug": "ts-node --inspect src/main.ts",
+    "db:push": "mysql -u root -p agri_connect < src/database/schema.sql",
+    "db:pull": "npx prisma db pull",
+    "db:generate": "npx prisma generate",
+    "db:sync": "npm run db:push && npm run db:pull && npm run db:generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@nestjs/common": "^11.1.16",
+    "@nestjs/core": "^11.1.16",
+    "@nestjs/platform-express": "^11.1.16",
+    "@prisma/client": "^7.4.2",
+    "dotenv": "^17.3.1",
+    "prisma": "^7.4.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.16",
+    "@types/node": "^25.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
