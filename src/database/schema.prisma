@@ -1,14 +1,91 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
+}
+
+model chat_room {
+  id                         Int       @id @default(autoincrement())
+  user1                      Int
+  user2                      Int
+  user_chat_room_user1Touser user      @relation("chat_room_user1Touser", fields: [user1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chat_room_ibfk_1")
+  user_chat_room_user2Touser user      @relation("chat_room_user2Touser", fields: [user2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chat_room_ibfk_2")
+  message                    message[]
+
+  @@index([user1], map: "user1")
+  @@index([user2], map: "user2")
+}
+
+model harvest {
+  id               Int              @id @default(autoincrement())
+  quantity         Int
+  unit             String           @db.VarChar(20)
+  owner_id         Int
+  name             String           @db.VarChar(255)
+  category         String           @db.VarChar(100)
+  unit_price       Decimal          @db.Decimal(10, 2)
+  user             user             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_1")
+  harvest_category harvest_category @relation(fields: [category], references: [category], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_2")
+  harvest_image    harvest_image[]
+
+  @@index([category], map: "category")
+  @@index([owner_id], map: "owner_id")
+}
+
+model harvest_category {
+  category String    @id @db.VarChar(100)
+  harvest  harvest[]
+}
+
+model harvest_image {
+  id         Int     @id @default(autoincrement())
+  harvest_id Int
+  img_url    String  @db.VarChar(500)
+  harvest    harvest @relation(fields: [harvest_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "harvest_image_ibfk_1")
+
+  @@index([harvest_id], map: "harvest_id")
+}
+
+model message {
+  id                              Int       @id @default(autoincrement())
+  chat_room_id                    Int
+  sender_id                       Int
+  recipient_id                    Int
+  text                            String    @db.Text
+  read                            Boolean   @default(false)
+  received                        Boolean   @default(false)
+  reply_to_id                     Int?
+  chat_room                       chat_room @relation(fields: [chat_room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_1")
+  user_message_sender_idTouser    user      @relation("message_sender_idTouser", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_2")
+  user_message_recipient_idTouser user      @relation("message_recipient_idTouser", fields: [recipient_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_3")
+  message                         message?  @relation("messageTomessage", fields: [reply_to_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_4")
+  other_message                   message[] @relation("messageTomessage")
+
+  @@index([chat_room_id], map: "chat_room_id")
+  @@index([recipient_id], map: "recipient_id")
+  @@index([reply_to_id], map: "reply_to_id")
+  @@index([sender_id], map: "sender_id")
+}
+
+model user {
+  id                                 Int         @id @default(autoincrement())
+  full_name                          String      @db.VarChar(255)
+  email                              String      @unique(map: "email") @db.VarChar(255)
+  passwd                             String      @db.VarChar(255)
+  profile                            String?     @db.VarChar(500)
+  is_verified                        Boolean     @default(false)
+  type                               user_type
+  chat_room_chat_room_user1Touser    chat_room[] @relation("chat_room_user1Touser")
+  chat_room_chat_room_user2Touser    chat_room[] @relation("chat_room_user2Touser")
+  harvest                            harvest[]
+  message_message_sender_idTouser    message[]   @relation("message_sender_idTouser")
+  message_message_recipient_idTouser message[]   @relation("message_recipient_idTouser")
+}
+
+enum user_type {
+  farmer
+  wholesaler
+  admin
 }
