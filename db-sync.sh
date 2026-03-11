@@ -13,9 +13,9 @@ echo "=> Applying schema.sql to $DB_NAME..."
 mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < src/database/schema.sql
 
 echo "=> Pulling database schema into Prisma..."
-npx prisma db pull
+npx prisma db pull --schema=./src/database/schema.prisma
 
 echo "=> Generating Prisma client..."
-npx prisma generate
+npx prisma generate --schema=./src/database/schema.prisma
 
 echo "=> Done!"
