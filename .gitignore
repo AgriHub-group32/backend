@@ -1,5 +1,7 @@
 node_modules
 build
 .env
-.claude
+.claude 
 prompt.txt
+claude-changes.csv
+
