@@ -12,8 +12,16 @@ CREATE TABLE IF NOT EXISTS `user` (
     email VARCHAR(255) NOT NULL UNIQUE,
     passwd VARCHAR(255) NOT NULL,
     profile VARCHAR(500),
+    phone VARCHAR(20),
+    location VARCHAR(255),
+    bio TEXT,
+    farm_name VARCHAR(255),
+    business_name VARCHAR(255),
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
-    type ENUM('farmer', 'wholesaler', 'admin') NOT NULL
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    type ENUM('farmer', 'wholesaler', 'admin') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS harvest_category (
@@ -28,6 +36,11 @@ CREATE TABLE IF NOT EXISTS harvest (
     name VARCHAR(255) NOT NULL,
     category VARCHAR(100) NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
+    description TEXT,
+    location VARCHAR(255),
+    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES `user`(id),
     FOREIGN KEY (category) REFERENCES harvest_category(category)
 );
@@ -43,6 +56,7 @@ CREATE TABLE IF NOT EXISTS chat_room (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user1 INT NOT NULL,
     user2 INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user1) REFERENCES `user`(id),
     FOREIGN KEY (user2) REFERENCES `user`(id)
 );
@@ -56,8 +70,61 @@ CREATE TABLE IF NOT EXISTS message (
     `read` BOOLEAN NOT NULL DEFAULT FALSE,
     received BOOLEAN NOT NULL DEFAULT FALSE,
     reply_to_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (chat_room_id) REFERENCES chat_room(id),
     FOREIGN KEY (sender_id) REFERENCES `user`(id),
     FOREIGN KEY (recipient_id) REFERENCES `user`(id),
     FOREIGN KEY (reply_to_id) REFERENCES message(id)
+);
+
+-- ================================================
+-- Order / Transaction System
+-- ================================================
+
+CREATE TABLE IF NOT EXISTS `order` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    buyer_id INT NOT NULL,
+    harvest_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(12, 2) NOT NULL,
+    status ENUM('pending', 'accepted', 'rejected', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (buyer_id) REFERENCES `user`(id),
+    FOREIGN KEY (harvest_id) REFERENCES harvest(id)
+);
+
+-- ================================================
+-- Payment System
+-- ================================================
+
+CREATE TABLE IF NOT EXISTS payment (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    amount DECIMAL(12, 2) NOT NULL,
+    method ENUM('mobile_money', 'bank_transfer', 'cash', 'platform_wallet') NOT NULL,
+    status ENUM('pending', 'completed', 'failed', 'refunded') NOT NULL DEFAULT 'pending',
+    transaction_ref VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES `order`(id)
+);
+
+-- ================================================
+-- Review & Rating System
+-- ================================================
+
+CREATE TABLE IF NOT EXISTS review (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reviewer_id INT NOT NULL,
+    reviewee_id INT NOT NULL,
+    order_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reviewer_id) REFERENCES `user`(id),
+    FOREIGN KEY (reviewee_id) REFERENCES `user`(id),
+    FOREIGN KEY (order_id) REFERENCES `order`(id),
+    UNIQUE KEY unique_review (reviewer_id, order_id)
 );
