@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -11,6 +12,7 @@ model chat_room {
   id                         Int       @id @default(autoincrement())
   user1                      Int
   user2                      Int
+  created_at                 DateTime? @default(now()) @db.Timestamp(0)
   user_chat_room_user1Touser user      @relation("chat_room_user1Touser", fields: [user1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chat_room_ibfk_1")
   user_chat_room_user2Touser user      @relation("chat_room_user2Touser", fields: [user2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chat_room_ibfk_2")
   message                    message[]
@@ -27,9 +29,15 @@ model harvest {
   name             String           @db.VarChar(255)
   category         String           @db.VarChar(100)
   unit_price       Decimal          @db.Decimal(10, 2)
+  description      String?          @db.Text
+  location         String?          @db.VarChar(255)
+  is_available     Boolean          @default(true)
+  created_at       DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamp(0)
   user             user             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_1")
   harvest_category harvest_category @relation(fields: [category], references: [category], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_2")
   harvest_image    harvest_image[]
+  order            order[]
 
   @@index([category], map: "category")
   @@index([owner_id], map: "owner_id")
@@ -58,6 +66,7 @@ model message {
   read                            Boolean   @default(false)
   received                        Boolean   @default(false)
   reply_to_id                     Int?
+  created_at                      DateTime? @default(now()) @db.Timestamp(0)
   chat_room                       chat_room @relation(fields: [chat_room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_1")
   user_message_sender_idTouser    user      @relation("message_sender_idTouser", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_2")
   user_message_recipient_idTouser user      @relation("message_recipient_idTouser", fields: [recipient_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_3")
@@ -76,17 +85,100 @@ model user {
   email                              String      @unique(map: "email") @db.VarChar(255)
   passwd                             String      @db.VarChar(255)
   profile                            String?     @db.VarChar(500)
+  phone                              String?     @db.VarChar(20)
+  location                           String?     @db.VarChar(255)
+  bio                                String?     @db.Text
+  farm_name                          String?     @db.VarChar(255)
+  business_name                      String?     @db.VarChar(255)
   is_verified                        Boolean     @default(false)
+  is_active                          Boolean     @default(true)
   type                               user_type
+  created_at                         DateTime?   @default(now()) @db.Timestamp(0)
+  updated_at                         DateTime?   @default(now()) @updatedAt @db.Timestamp(0)
   chat_room_chat_room_user1Touser    chat_room[] @relation("chat_room_user1Touser")
   chat_room_chat_room_user2Touser    chat_room[] @relation("chat_room_user2Touser")
   harvest                            harvest[]
   message_message_sender_idTouser    message[]   @relation("message_sender_idTouser")
   message_message_recipient_idTouser message[]   @relation("message_recipient_idTouser")
+  order_order_buyer_idTouser         order[]     @relation("order_buyer_idTouser")
+  review_review_reviewer_idTouser    review[]    @relation("review_reviewer_idTouser")
+  review_review_reviewee_idTouser    review[]    @relation("review_reviewee_idTouser")
+}
+
+model order {
+  id                       Int           @id @default(autoincrement())
+  buyer_id                 Int
+  harvest_id               Int
+  quantity                 Int
+  unit_price               Decimal       @db.Decimal(10, 2)
+  total_price              Decimal       @db.Decimal(12, 2)
+  status                   order_status  @default(pending)
+  note                     String?       @db.Text
+  created_at               DateTime?     @default(now()) @db.Timestamp(0)
+  updated_at               DateTime?     @default(now()) @updatedAt @db.Timestamp(0)
+  user_order_buyer_idTouser user         @relation("order_buyer_idTouser", fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_ibfk_1")
+  harvest                  harvest       @relation(fields: [harvest_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_ibfk_2")
+  payment                  payment[]
+  review                   review[]
+
+  @@index([buyer_id], map: "buyer_id")
+  @@index([harvest_id], map: "harvest_id")
+}
+
+model payment {
+  id              Int            @id @default(autoincrement())
+  order_id        Int
+  amount          Decimal        @db.Decimal(12, 2)
+  method          payment_method
+  status          payment_status @default(pending)
+  transaction_ref String?        @unique @db.VarChar(255)
+  created_at      DateTime?      @default(now()) @db.Timestamp(0)
+  order           order          @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_ibfk_1")
+
+  @@index([order_id], map: "order_id")
+}
+
+model review {
+  id                             Int       @id @default(autoincrement())
+  reviewer_id                    Int
+  reviewee_id                    Int
+  order_id                       Int
+  rating                         Int       @db.TinyInt
+  comment                        String?   @db.Text
+  created_at                     DateTime? @default(now()) @db.Timestamp(0)
+  user_review_reviewer_idTouser  user      @relation("review_reviewer_idTouser", fields: [reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
+  user_review_reviewee_idTouser  user      @relation("review_reviewee_idTouser", fields: [reviewee_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  order                          order     @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_3")
+
+  @@unique([reviewer_id, order_id], map: "unique_review")
+  @@index([order_id], map: "order_id")
+  @@index([reviewee_id], map: "reviewee_id")
 }
 
 enum user_type {
   farmer
   wholesaler
   admin
+}
+
+enum order_status {
+  pending
+  accepted
+  rejected
+  completed
+  cancelled
+}
+
+enum payment_method {
+  mobile_money
+  bank_transfer
+  cash
+  platform_wallet
+}
+
+enum payment_status {
+  pending
+  completed
+  failed
+  refunded
 }
