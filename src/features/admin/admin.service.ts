@@ -3,7 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service.js';
+import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class AdminService {

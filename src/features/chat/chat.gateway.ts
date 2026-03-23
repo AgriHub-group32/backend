@@ -8,8 +8,8 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { AuthTokenService } from '../../utils/authToken.service.js';
-import { ChatService } from './chat.service.js';
+import { AuthTokenService } from '../../utils/authToken.service';
+import { ChatService } from './chat.service';
 
 @WebSocketGateway({ cors: true, namespace: '/chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {

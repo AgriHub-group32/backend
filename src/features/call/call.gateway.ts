@@ -8,7 +8,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { AuthTokenService } from '../../utils/authToken.service.js';
+import { AuthTokenService } from '../../utils/authToken.service';
 
 @WebSocketGateway({ cors: true, namespace: '/calls' })
 export class CallGateway implements OnGatewayConnection, OnGatewayDisconnect {

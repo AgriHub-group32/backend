@@ -5,8 +5,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { PrismaService } from '../../database/prisma.service.js';
-import { CreatePaymentDto } from './dtos/create-payment.dto.js';
+import { PrismaService } from '../../database/prisma.service';
+import { CreatePaymentDto } from './dtos/create-payment.dto';
 
 @Injectable()
 export class PaymentService {

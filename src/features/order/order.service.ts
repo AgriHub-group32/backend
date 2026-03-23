@@ -4,8 +4,8 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service.js';
-import { CreateOrderDto } from './dtos/create-order.dto.js';
+import { PrismaService } from '../../database/prisma.service';
+import { CreateOrderDto } from './dtos/create-order.dto';
 
 @Injectable()
 export class OrderService {

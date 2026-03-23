@@ -4,14 +4,17 @@
   "description": "",
   "main": "build/main.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/generated build/generated",
     "start": "node build/main.js",
     "start:dev": "ts-node src/main.ts",
     "start:debug": "ts-node --inspect src/main.ts",
     "db:push": "mysql -u root -p agri_connect < src/database/schema.sql",
     "db:pull": "npx prisma db pull",
     "db:generate": "npx prisma generate",
-    "db:sync": "npm run db:push && npm run db:pull && npm run db:generate"
+    "db:sync": "npm run db:push && npm run db:pull && npm run db:generate",
+    "test": "jest --config jest.config.ts",
+    "test:watch": "jest --config jest.config.ts --watch",
+    "test:cov": "jest --config jest.config.ts --coverage"
   },
   "keywords": [],
   "author": "",
@@ -39,10 +42,14 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
+    "@nestjs/testing": "^11.1.17",
     "@types/bcrypt": "^6.0.0",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.4.0",
     "@types/passport-jwt": "^4.0.1",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

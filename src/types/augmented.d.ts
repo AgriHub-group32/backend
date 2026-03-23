@@ -1,4 +1,4 @@
-import { user } from "../generated/prisma/index.js";
+import { user } from "../generated/prisma/index";
 import "express";
 
 

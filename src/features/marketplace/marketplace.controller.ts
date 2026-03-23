@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { MarketplaceService } from './marketplace.service.js';
-import { SearchQueryDto } from './dtos/search-query.dto.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { MarketplaceService } from './marketplace.service';
+import { SearchQueryDto } from './dtos/search-query.dto';
 
 @Controller('marketplace')
 @UseGuards(JwtAuthGuard)

@@ -7,13 +7,13 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { RolesGuard } from '../../common/guards/roles.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { Roles } from '../../common/decorators/roles.decorator.js';
-import { PaymentService } from './payment.service.js';
-import { CreatePaymentDto } from './dtos/create-payment.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { PaymentService } from './payment.service';
+import { CreatePaymentDto } from './dtos/create-payment.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('payments')
 @UseGuards(JwtAuthGuard)

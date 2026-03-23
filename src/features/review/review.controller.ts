@@ -7,11 +7,11 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { ReviewService } from './review.service.js';
-import { CreateReviewDto } from './dtos/create-review.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { ReviewService } from './review.service';
+import { CreateReviewDto } from './dtos/create-review.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('reviews')
 @UseGuards(JwtAuthGuard)

@@ -8,13 +8,13 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { RolesGuard } from '../../common/guards/roles.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { Roles } from '../../common/decorators/roles.decorator.js';
-import { OrderService } from './order.service.js';
-import { CreateOrderDto } from './dtos/create-order.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { OrderService } from './order.service';
+import { CreateOrderDto } from './dtos/create-order.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)

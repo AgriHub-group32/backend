@@ -8,10 +8,10 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { ChatService } from './chat.service.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { ChatService } from './chat.service';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)

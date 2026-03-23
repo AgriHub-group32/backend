@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AccountController } from './account.controller.js';
-import { AccountService } from './account.service.js';
-import { BcryptService } from '../../utils/bcrypt.service.js';
+import { AccountController } from './account.controller';
+import { AccountService } from './account.service';
+import { BcryptService } from '../../utils/bcrypt.service';
 
 @Module({
   controllers: [AccountController],

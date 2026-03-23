@@ -4,9 +4,9 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service.js';
-import { CreateHarvestDto } from './dtos/create-harvest.dto.js';
-import { UpdateHarvestDto } from './dtos/update-harvest.dto.js';
+import { PrismaService } from '../../database/prisma.service';
+import { CreateHarvestDto } from './dtos/create-harvest.dto';
+import { UpdateHarvestDto } from './dtos/update-harvest.dto';
 
 @Injectable()
 export class HarvestService {

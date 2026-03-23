@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service.js';
-import { SearchQueryDto } from './dtos/search-query.dto.js';
-import { Prisma } from '../../generated/prisma/index.js';
+import { PrismaService } from '../../database/prisma.service';
+import { SearchQueryDto } from './dtos/search-query.dto';
+import { Prisma } from '../../generated/prisma/index';
 
 @Injectable()
 export class MarketplaceService {

@@ -12,15 +12,15 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { RolesGuard } from '../../common/guards/roles.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { Roles } from '../../common/decorators/roles.decorator.js';
-import { multerOptions } from '../../common/config/multer.config.js';
-import { HarvestService } from './harvest.service.js';
-import { CreateHarvestDto } from './dtos/create-harvest.dto.js';
-import { UpdateHarvestDto } from './dtos/update-harvest.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { multerOptions } from '../../common/config/multer.config';
+import { HarvestService } from './harvest.service';
+import { CreateHarvestDto } from './dtos/create-harvest.dto';
+import { UpdateHarvestDto } from './dtos/update-harvest.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('harvests')
 export class HarvestController {

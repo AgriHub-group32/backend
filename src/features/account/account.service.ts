@@ -3,11 +3,11 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service.js';
-import { BcryptService } from '../../utils/bcrypt.service.js';
-import { UpdateProfileDto } from './dtos/update-profile.dto.js';
-import { ChangePasswordDto } from './dtos/change-password.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { PrismaService } from '../../database/prisma.service';
+import { BcryptService } from '../../utils/bcrypt.service';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Injectable()
 export class AccountService {

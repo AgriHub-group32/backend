@@ -10,13 +10,13 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
-import { multerOptions } from '../../common/config/multer.config.js';
-import { AccountService } from './account.service.js';
-import { UpdateProfileDto } from './dtos/update-profile.dto.js';
-import { ChangePasswordDto } from './dtos/change-password.dto.js';
-import type { user } from '../../generated/prisma/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { multerOptions } from '../../common/config/multer.config';
+import { AccountService } from './account.service';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import type { user } from '../../generated/prisma/index';
 
 @Controller('account')
 @UseGuards(JwtAuthGuard)

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { AuthTokenType } from "../types/general.js";
+import { AuthTokenType } from "../types/general";
 import { JwtService } from "@nestjs/jwt";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "../database/prisma.service.js";
+import { PrismaService } from "../database/prisma.service";
 
 @Injectable()
 export class AuthTokenService extends PassportStrategy(Strategy) {
