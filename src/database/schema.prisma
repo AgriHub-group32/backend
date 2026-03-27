@@ -18,7 +18,6 @@ model chat_room {
   message                    message[]
 
   @@unique([user1, user2], map: "unique_chat_room")
-  @@index([user1], map: "user1")
   @@index([user2], map: "user2")
 }
 
@@ -30,10 +29,10 @@ model harvest {
   name             String           @db.VarChar(255)
   category         String           @db.VarChar(100)
   unit_price       Decimal          @db.Decimal(10, 2)
-  description      String?          @db.Text
-  location         String?          @db.VarChar(255)
-  is_available     Boolean          @default(true)
   created_at       DateTime?        @default(now()) @db.Timestamp(0)
+  description      String?          @db.Text
+  is_available     Boolean          @default(true)
+  location         String?          @db.VarChar(255)
   updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamp(0)
   user             user             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_1")
   harvest_category harvest_category @relation(fields: [category], references: [category], onDelete: NoAction, onUpdate: NoAction, map: "harvest_ibfk_2")
@@ -86,15 +85,15 @@ model user {
   email                              String      @unique(map: "email") @db.VarChar(255)
   passwd                             String      @db.VarChar(255)
   profile                            String?     @db.VarChar(500)
-  phone                              String?     @db.VarChar(20)
-  location                           String?     @db.VarChar(255)
-  bio                                String?     @db.Text
-  farm_name                          String?     @db.VarChar(255)
-  business_name                      String?     @db.VarChar(255)
   is_verified                        Boolean     @default(false)
-  is_active                          Boolean     @default(true)
   type                               user_type
+  bio                                String?     @db.Text
+  business_name                      String?     @db.VarChar(255)
   created_at                         DateTime?   @default(now()) @db.Timestamp(0)
+  farm_name                          String?     @db.VarChar(255)
+  is_active                          Boolean     @default(true)
+  location                           String?     @db.VarChar(255)
+  phone                              String?     @db.VarChar(20)
   chat_room_chat_room_user1Touser    chat_room[] @relation("chat_room_user1Touser")
   chat_room_chat_room_user2Touser    chat_room[] @relation("chat_room_user2Touser")
   harvest                            harvest[]

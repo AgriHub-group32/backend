@@ -3,16 +3,13 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BcryptService } from './bcrypt.service';
 
-// Mock bcrypt module
+// Mock bcrypt module — namespace import (import * as bcrypt)
 jest.mock('bcrypt', () => ({
-  __esModule: true,
-  default: {
-    hash: jest.fn(),
-    compare: jest.fn(),
-  },
+  hash: jest.fn(),
+  compare: jest.fn(),
 }));
 
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 describe('BcryptService', () => {
   let service: BcryptService;

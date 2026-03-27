@@ -1,10 +1,8 @@
-import { Controller, Get, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
 import { MarketplaceService } from './marketplace.service';
 import { SearchQueryDto } from './dtos/search-query.dto';
 
 @Controller('marketplace')
-@UseGuards(JwtAuthGuard)
 export class MarketplaceController {
   constructor(private readonly marketplaceService: MarketplaceService) {}
 
