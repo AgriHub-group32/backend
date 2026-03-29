@@ -5985,10 +5985,11 @@
     /* Section headings */
     .section-title, section h2 { font-size: clamp(1.4rem, 5vw, 2rem); }
 
-    /* Login/Signup pages */
+    /* Login/Signup pages — hide decorative panels, keep forms */
     .login-page, .signup-page { grid-template-columns: 1fr; }
-    .login-left, .signup-left { display: none; }
-    .login-right, .signup-right { padding: 2.5rem 5%; }
+    .login-right { display: none; }
+    .signup-left { display: none; }
+    .login-left, .signup-right { padding: 2.5rem 5%; }
 
     /* Listing cards */
     .listings-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
