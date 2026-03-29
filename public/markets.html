@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markets — Agriconnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <h1><a href="index.html">Agriconnect</a></h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="farmers.html">Farmers</a></li>
+            <li><a href="markets.html" class="active">Markets</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="signup.html" class="nav-cta">Join Now</a></li>
+        </ul>
+    </nav>
+    <button class="hamburger" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <span>Markets</span>
+        </div>
+        <h2>Find the <span>Best Deals</span><br>for Your Crops</h2>
+        <p>Browse hundreds of live produce listings from verified farmers across Ghana. Get the freshest stock at transparent, fair market prices.</p><br>
+        <div class="hero-buttons">
+            <a href="#listings" class="btn btn-primary">Browse Listings</a>
+            <a href="signup.html" class="btn btn-outline">Post Your Produce</a>
+        </div>
+    </section>
+
+    <!-- PRICE TICKER -->
+    <div class="ticker-section">
+        <div class="ticker-inner">
+            <div class="ticker-item"><span class="crop-name">🌽 Maize</span><span class="price">GH₵ 320/bag</span><span class="up">▲ 2.4%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍅 Tomatoes</span><span class="price">GH₵ 85/crate</span><span class="down">▼ 1.1%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍠 Yam</span><span class="price">GH₵ 210/bag</span><span class="up">▲ 3.7%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍫 Cocoa</span><span class="price">GH₵ 1,450/bag</span><span class="up">▲ 0.9%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍌 Plantain</span><span class="price">GH₵ 55/bunch</span><span class="down">▼ 0.5%</span></div>
+            <div class="ticker-item"><span class="crop-name">🫘 Cowpea</span><span class="price">GH₵ 420/bag</span><span class="up">▲ 1.8%</span></div>
+            <div class="ticker-item"><span class="crop-name">🌶️ Pepper</span><span class="price">GH₵ 110/crate</span><span class="flat">— 0.0%</span></div>
+            <div class="ticker-item"><span class="crop-name">🥬 Cabbage</span><span class="price">GH₵ 40/head</span><span class="up">▲ 4.2%</span></div>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item"><span class="crop-name">🌽 Maize</span><span class="price">GH₵ 320/bag</span><span class="up">▲ 2.4%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍅 Tomatoes</span><span class="price">GH₵ 85/crate</span><span class="down">▼ 1.1%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍠 Yam</span><span class="price">GH₵ 210/bag</span><span class="up">▲ 3.7%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍫 Cocoa</span><span class="price">GH₵ 1,450/bag</span><span class="up">▲ 0.9%</span></div>
+            <div class="ticker-item"><span class="crop-name">🍌 Plantain</span><span class="price">GH₵ 55/bunch</span><span class="down">▼ 0.5%</span></div>
+            <div class="ticker-item"><span class="crop-name">🫘 Cowpea</span><span class="price">GH₵ 420/bag</span><span class="up">▲ 1.8%</span></div>
+            <div class="ticker-item"><span class="crop-name">🌶️ Pepper</span><span class="price">GH₵ 110/crate</span><span class="flat">— 0.0%</span></div>
+            <div class="ticker-item"><span class="crop-name">🥬 Cabbage</span><span class="price">GH₵ 40/head</span><span class="up">▲ 4.2%</span></div>
+        </div>
+    </div>
+
+    <!-- SEARCH & FILTER -->
+    <div class="search-section">
+        <div class="search-bar">
+            <div class="search-input-wrap">
+                <span><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="searchInput" placeholder="Search crops, farmers, regions..." oninput="debouncedSearch()" onkeydown="if(event.key==='Enter') searchListings()" />
+            </div>
+            <select class="filter-select" id="categoryFilter" onchange="searchListings()">
+                <option value="">All Crops</option>
+                <option>Maize & Cereals</option>
+                <option>Tomatoes</option>
+                <option>Yam & Cassava</option>
+                <option>Cocoa</option>
+                <option>Plantain</option>
+                <option>Vegetables</option>
+                <option>Legumes</option>
+                <option>Fruits</option>
+                <option>Peppers & Spices</option>
+            </select>
+            <select class="filter-select" id="regionFilter" onchange="searchListings()">
+                <option value="">All Regions</option>
+                <option>Ashanti</option>
+                <option>Greater Accra</option>
+                <option>Western</option>
+                <option>Bono</option>
+                <option>Northern</option>
+                <option>Eastern</option>
+                <option>Volta</option>
+                <option>Central</option>
+                <option>North-East</option>
+                <option>Savannah</option>
+                <option>Upper West</option>
+                <option>Upper East</option>
+                <option>Oti</option>
+                <option>Ahafo</option>
+                <option>Western North</option>
+                <option>Bono East</option>
+            </select>
+            <button class="search-btn" onclick="searchListings()">Search</button>
+        </div>
+    </div>
+
+    <!-- LISTINGS -->
+    <section class="listings-section" id="listings">
+        <div class="listings-header">
+            <h2>Live Produce Listings</h2>
+            <span class="listings-count">Loading...</span>
+        </div>
+        <div class="listings-grid">
+            <!-- Listings loaded dynamically from backend -->
+            <div style="text-align:center; padding: 3rem; color: var(--text-muted); grid-column: 1/-1;">
+                <div class="spinner" style="margin: 0 auto 1rem;"></div>
+                <p>Loading listings...</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;" id="loadMoreWrap">
+            <button class="btn btn-green" id="loadMoreBtn" onclick="loadMore()">Load More Listings</button>
+        </div>
+    </section>
+
+    <!-- REGIONS -->
+    <section class="regions-section">
+        <h2>Browse by Region</h2>
+        <p>Find produce from farmers across all regions of Ghana.</p>
+        <div class="regions-grid">
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-leaf"></i></div><h4>Ashanti</h4><p>324 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-building"></i></div><h4>Greater Accra</h4><p>198 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-water"></i></div><h4>Western</h4><p>156 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-wheat-awn"></i></div><h4>Bono</h4><p>210 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-sun"></i></div><h4>Northern</h4><p>187 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-tree"></i></div><h4>Eastern</h4><p>143 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-bolt"></i></div><h4>Volta</h4><p>119 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-tree"></i></div><h4>Central</h4><p>134 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-mountain-sun"></i></div><h4>Savannah</h4><p>165 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-wheat-awn"></i></div><h4>Upper West</h4><p>112 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-sun"></i></div><h4>North-East</h4><p>198 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-wheat-awn"></i></div><h4>Upper East</h4><p>187 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-leaf"></i></div><h4>Western North</h4><p>143 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-wheat-awn"></i></div><h4>Ahafo</h4><p>119 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-wheat-awn"></i></div><h4>Bono East</h4><p>134 listings</p></div>
+            <div class="region-card"><div class="icon"><i class="fa-solid fa-leaf"></i></div><h4>Oti</h4><p>143 listings</p></div>
+
+        </div>
+    </section>
+
+    <!-- PRICE TABLE -->
+    <section class="price-section">
+        <h2>Today's Market Prices</h2>
+        <p>Live prices updated daily. Last updated: Sunday, 15 March 2026 — 08:00 GMT</p>
+        <div class="price-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Crop</th>
+                        <th>Unit</th>
+                        <th>Avg. Price</th>
+                        <th>7-Day Trend</th>
+                        <th>Region</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="crop-cell">🌽 Maize (White)</div></td>
+                        <td>50kg bag</td>
+                        <td class="price-cell">GH₵ 320</td>
+                        <td><span class="trend-up">▲ 2.4%</span></td>
+                        <td>Ashanti</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🍅 Tomatoes (Roma)</div></td>
+                        <td>Crate</td>
+                        <td class="price-cell">GH₵ 85</td>
+                        <td><span class="trend-down">▼ 1.1%</span></td>
+                        <td>Bono</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🍠 Pona Yam</div></td>
+                        <td>Bag</td>
+                        <td class="price-cell">GH₵ 210</td>
+                        <td><span class="trend-up">▲ 3.7%</span></td>
+                        <td>Northern</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🍫 Cocoa Beans</div></td>
+                        <td>64kg bag</td>
+                        <td class="price-cell">GH₵ 1,450</td>
+                        <td><span class="trend-up">▲ 0.9%</span></td>
+                        <td>Western</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🍌 Plantain</div></td>
+                        <td>Bunch</td>
+                        <td class="price-cell">GH₵ 55</td>
+                        <td><span class="trend-down">▼ 0.5%</span></td>
+                        <td>Volta</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🫘 Cowpea</div></td>
+                        <td>50kg bag</td>
+                        <td class="price-cell">GH₵ 420</td>
+                        <td><span class="trend-up">▲ 1.8%</span></td>
+                        <td>Upper East</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🌶️ Shito Pepper</div></td>
+                        <td>Crate</td>
+                        <td class="price-cell">GH₵ 110</td>
+                        <td><span class="trend-flat">— 0.0%</span></td>
+                        <td>Greater Accra</td>
+                    </tr>
+                    <tr>
+                        <td><div class="crop-cell">🥬 Cabbage</div></td>
+                        <td>Per head</td>
+                        <td class="price-cell">GH₵ 40</td>
+                        <td><span class="trend-up">▲ 4.2%</span></td>
+                        <td>Eastern</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- FOR BUYERS -->
+    <section style="background: var(--green-dark); padding: 6rem 5%;">
+        <div class="buyers-section" style="padding: 0;">
+            <div class="buyers-text">
+                <h2>Are You a <span>Buyer?</span></h2>
+                <p>Agriconnect makes it easy for businesses, retailers, and restaurants to source fresh produce directly from verified farmers — at the best prices with no middlemen.</p>
+                <a href="signup.html" class="btn btn-primary" style="margin-top: 0.5rem;">Register as a Buyer</a>
+            </div>
+            <div class="buyers-perks">
+                <div class="perk">
+                    <div class="perk-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div>
+                        <h4>Verified Farmers Only</h4>
+                        <p>Every farmer is screened. You get quality produce from trusted, verified sources every time.</p>
+                    </div>
+                </div>
+                <div class="perk">
+                    <div class="perk-icon"><i class="fa-solid fa-coins"></i></div>
+                    <div>
+                        <h4>Competitive Pricing</h4>
+                        <p>Cut out the middlemen and buy direct — saving you money and supporting farmers fairly.</p>
+                    </div>
+                </div>
+                <div class="perk">
+                    <div class="perk-icon"><i class="fa-solid fa-box"></i></div>
+                    <div>
+                        <h4>Reliable Supply Chain</h4>
+                        <p>Build relationships with farmers for recurring orders and reliable weekly or monthly supply.</p>
+                    </div>
+                </div>
+                <div class="perk">
+                    <div class="perk-icon"><i class="fa-solid fa-bell"></i></div>
+                    <div>
+                        <h4>Price Alerts</h4>
+                        <p>Set alerts for your preferred crops and get notified when prices drop or new stock is listed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Ready to Start Trading?</h2>
+        <p>Join thousands of farmers and buyers already using Agriconnect to trade smarter and earn more.</p>
+        <div class="cta-buttons">
+            <a href="signup.html" class="btn btn-primary">Create Free Account</a>
+            <a href="contact.html" class="btn btn-outline">Talk to Our Team</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div id="modalContent">Loading...</div>
+    </div>
+</div>
+<style>
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center;padding:2rem;}
+    .modal-overlay.show{display:flex;}
+    .modal-card{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:2.5rem;position:relative;animation:fadeUp 0.3s ease;}
+    .modal-close{position:absolute;top:1rem;right:1.2rem;background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--text-muted);line-height:1;}
+    .modal-close:hover{color:var(--green-dark);}
+    .modal-card h3{font-family:'Playfair Display',serif;color:var(--green-dark);font-size:1.5rem;margin-bottom:0.5rem;}
+    .modal-card .detail-row{display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #eee;font-size:0.95rem;}
+    .modal-card .detail-row:last-child{border-bottom:none;}
+    .modal-card .detail-label{color:var(--text-muted);}
+    .modal-card .detail-value{font-weight:500;color:var(--green-dark);text-align:right;}
+    .modal-card .detail-price{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--green-dark);margin:1rem 0;}
+    .modal-card .detail-actions{display:flex;gap:0.8rem;margin-top:1.5rem;}
+    .modal-card .detail-actions a,.modal-card .detail-actions button{flex:1;padding:0.8rem;border-radius:8px;text-align:center;font-family:'DM Sans',sans-serif;font-size:0.95rem;cursor:pointer;text-decoration:none;border:none;}
+    .modal-card .btn-order{background:var(--green-mid);color:#fff;}
+    .modal-card .btn-order:hover{background:var(--green-dark);}
+    .modal-card .btn-msg{background:var(--cream);color:var(--green-dark);border:1px solid var(--green-mid);}
+</style>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h3>Agriconnect</h3>
+            <p>Empowering farmers across Africa by connecting them directly to buyers and markets — fairly, transparently, and efficiently.</p>
+        </div>
+        <div class="footer-links">
+            <h4>Platform</h4>
+            <ul>
+                <li><a href="farmers.html">For Farmers</a></li>
+                <li><a href="markets.html">Browse Markets</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="login.html">Log In</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Use</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Agriconnect. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    let currentPage = 1;
+    let totalPages = 1;
+    const LIMIT = 9;
+
+    // ── DEMO LISTINGS (used as fallback when backend is offline) ──────────────
+    const DEMO_LISTINGS = [
+        { id: 1,  name: 'White Maize',        category: 'Maize & Cereals',  unit_price: 320,  quantity: 500,  unit: 'bag',    location: 'Ashanti',       description: 'Fresh white maize from Ashanti Region. Well dried and ready for milling.',                   user: { full_name: 'Kwame Asante',     location: 'Ashanti' },       harvest_image: [], farmer_rating: { avg: 4.8, count: 23 } },
+        { id: 2,  name: 'Roma Tomatoes',       category: 'Tomatoes',         unit_price: 85,   quantity: 200,  unit: 'crate',  location: 'Bono',          description: 'Premium quality Roma tomatoes. Freshly harvested, perfect for sauce and cooking.',          user: { full_name: 'Abena Boateng',    location: 'Bono' },          harvest_image: [], farmer_rating: { avg: 4.6, count: 17 } },
+        { id: 3,  name: 'Pona Yam',            category: 'Yam & Cassava',    unit_price: 210,  quantity: 300,  unit: 'bag',    location: 'Northern',      description: 'Premium Pona yam. Large tubers from Northern Region farms.',                               user: { full_name: 'Ibrahim Alhassan', location: 'Northern' },      harvest_image: [], farmer_rating: { avg: 4.7, count: 31 } },
+        { id: 4,  name: 'Cocoa Beans',         category: 'Cocoa',            unit_price: 1450, quantity: 80,   unit: 'bag',    location: 'Western',       description: 'Grade A cocoa beans. Sun-dried and fermented properly. Ready for export or processing.',   user: { full_name: 'Yaw Darko',        location: 'Western' },       harvest_image: [], farmer_rating: { avg: 4.9, count: 42 } },
+        { id: 5,  name: 'Ripe Plantain',       category: 'Plantain',         unit_price: 55,   quantity: 400,  unit: 'bunch',  location: 'Volta',         description: 'Fresh ripe plantain from Volta Region. Sweet and perfect for kelewele or frying.',        user: { full_name: 'Edem Agbeko',      location: 'Volta' },         harvest_image: [], farmer_rating: { avg: 4.4, count: 12 } },
+        { id: 6,  name: 'Black-Eyed Cowpea',   category: 'Legumes',          unit_price: 420,  quantity: 150,  unit: 'bag',    location: 'Upper East',    description: 'Clean black-eyed cowpea. Well sorted and dried. Ideal for households and traders.',       user: { full_name: 'Akosua Ndoum',     location: 'Upper East' },    harvest_image: [], farmer_rating: { avg: 4.5, count: 19 } },
+        { id: 7,  name: 'Shito Pepper',        category: 'Peppers & Spices', unit_price: 110,  quantity: 250,  unit: 'crate',  location: 'Greater Accra', description: 'Fresh shito pepper. Hot and aromatic. Great for cooking and pepper sauce.',              user: { full_name: 'Ama Mensah',       location: 'Greater Accra' }, harvest_image: [], farmer_rating: { avg: 4.3, count: 8  } },
+        { id: 8,  name: 'Cabbage',             category: 'Vegetables',       unit_price: 40,   quantity: 600,  unit: 'head',   location: 'Eastern',       description: 'Fresh cabbage from Eastern Region highlands. Crispy and well-formed heads.',              user: { full_name: 'Kofi Appiah',      location: 'Eastern' },       harvest_image: [], farmer_rating: { avg: 4.6, count: 14 } },
+        { id: 9,  name: 'Yellow Maize',        category: 'Maize & Cereals',  unit_price: 310,  quantity: 800,  unit: 'bag',    location: 'Bono',          description: 'Dry yellow maize. High quality grain suitable for poultry feed and human consumption.',  user: { full_name: 'Nana Boateng',     location: 'Bono' },          harvest_image: [], farmer_rating: { avg: 4.5, count: 27 } },
+        { id: 10, name: 'Sweet Pineapple',     category: 'Fruits',           unit_price: 30,   quantity: 1000, unit: 'piece',  location: 'Eastern',       description: 'Freshly harvested sweet pineapple from Eastern Region. Juicy and ripe.',                 user: { full_name: 'Grace Ofori',      location: 'Eastern' },       harvest_image: [], farmer_rating: { avg: 4.7, count: 36 } },
+        { id: 11, name: 'Fresh Cassava',       category: 'Yam & Cassava',    unit_price: 120,  quantity: 200,  unit: 'bag',    location: 'Central',       description: 'Fresh cassava roots from Central Region. Ready for gari, fufu or ampesi processing.',    user: { full_name: 'Adjoa Quansah',    location: 'Central' },       harvest_image: [], farmer_rating: { avg: 4.2, count: 9  } },
+        { id: 12, name: 'Red Palm Oil',        category: 'Vegetables',       unit_price: 580,  quantity: 100,  unit: 'gallon', location: 'Western',       description: 'Pure unrefined red palm oil from Western Region. Fresh pressed and highly nutritious.',   user: { full_name: 'Kwesi Entsie',     location: 'Western' },       harvest_image: [], farmer_rating: { avg: 4.8, count: 21 } },
+        { id: 13, name: 'Soybean',             category: 'Legumes',          unit_price: 380,  quantity: 200,  unit: 'bag',    location: 'Northern',      description: 'Clean soybean from Northern Region. Good protein content for tofu and animal feed.',     user: { full_name: 'Fuseini Mahama',   location: 'Northern' },      harvest_image: [], farmer_rating: { avg: 4.4, count: 16 } },
+        { id: 14, name: 'Okra',                category: 'Vegetables',       unit_price: 60,   quantity: 300,  unit: 'crate',  location: 'Ashanti',       description: 'Fresh tender okra. Harvested daily and perfect for soups and stews.',                   user: { full_name: 'Adwoa Frimpong',   location: 'Ashanti' },       harvest_image: [], farmer_rating: { avg: 4.3, count: 11 } },
+        { id: 15, name: 'Watermelon',          category: 'Fruits',           unit_price: 25,   quantity: 500,  unit: 'piece',  location: 'Savannah',      description: 'Large sweet watermelons from Savannah Region. Perfect for the dry season.',             user: { full_name: 'Sulemana Issaka',  location: 'Savannah' },      harvest_image: [], farmer_rating: { avg: 4.6, count: 18 } },
+        { id: 16, name: 'Cherry Tomatoes',     category: 'Tomatoes',         unit_price: 95,   quantity: 120,  unit: 'crate',  location: 'Ashanti',       description: 'Vibrant cherry tomatoes from Ashanti. Sweet and firm. Ideal for salads and garnish.',   user: { full_name: 'Serwa Acheampong', location: 'Ashanti' },       harvest_image: [], farmer_rating: { avg: 4.5, count: 13 } },
+        { id: 17, name: 'Garden Eggs',         category: 'Vegetables',       unit_price: 50,   quantity: 400,  unit: 'crate',  location: 'Bono East',     description: 'Fresh garden eggs. Small and tender, great for garden egg stew and sauce.',            user: { full_name: 'Yaa Asante',       location: 'Bono East' },     harvest_image: [], farmer_rating: { avg: 4.1, count: 7  } },
+        { id: 18, name: 'Mango',               category: 'Fruits',           unit_price: 20,   quantity: 800,  unit: 'piece',  location: 'Northern',      description: 'Juicy ripe mangoes from Northern Region. Sweet and fleshy. In season now.',             user: { full_name: 'Amadu Seidu',      location: 'Northern' },      harvest_image: [], farmer_rating: { avg: 4.7, count: 29 } },
+    ];
+
+    // Client-side search/filter on demo listings
+    function searchDemoListings(search, category, region, page) {
+        let filtered = DEMO_LISTINGS.slice();
+        if (search) {
+            const q = search.toLowerCase();
+            filtered = filtered.filter(l =>
+                l.name.toLowerCase().includes(q) ||
+                l.category.toLowerCase().includes(q) ||
+                l.location.toLowerCase().includes(q) ||
+                l.user.full_name.toLowerCase().includes(q) ||
+                (l.description && l.description.toLowerCase().includes(q))
+            );
+        }
+        if (category) filtered = filtered.filter(l => l.category === category);
+        if (region)   filtered = filtered.filter(l => l.location.toLowerCase().includes(region.toLowerCase()));
+        const total      = filtered.length;
+        const pages      = Math.max(1, Math.ceil(total / LIMIT));
+        const start      = (page - 1) * LIMIT;
+        const listings   = filtered.slice(start, start + LIMIT);
+        return { listings, total, totalPages: pages };
+    }
+
+    // Banner color classes based on category
+    const bannerColors = {
+        'Maize & Cereals': 'banner-green',
+        'Tomatoes': 'banner-red',
+        'Yam & Cassava': 'banner-earth',
+        'Cocoa': 'banner-gold',
+        'Vegetables': 'banner-teal',
+        'Plantain': 'banner-green',
+        'Legumes': 'banner-purple',
+        'Peppers & Spices': 'banner-red',
+        'Fruits': 'banner-green',
+    };
+
+    const categoryEmojis = {
+        'Maize & Cereals': '🌽',
+        'Tomatoes': '🍅',
+        'Yam & Cassava': '🍠',
+        'Cocoa': '🍫',
+        'Vegetables': '🥬',
+        'Plantain': '🍌',
+        'Legumes': '🫘',
+        'Peppers & Spices': '🌶️',
+        'Fruits': '🍊',
+    };
+
+    function createListingCard(harvest) {
+        const banner = bannerColors[harvest.category] || 'banner-green';
+        const emoji = categoryEmojis[harvest.category] || '🌾';
+        const price = Number(harvest.unit_price).toLocaleString();
+        const qty = Number(harvest.quantity).toLocaleString();
+        const farmerName = harvest.user ? harvest.user.full_name : 'Farmer';
+        const location = harvest.location || (harvest.user && harvest.user.location) || 'Ghana';
+        const isAvailable = harvest.quantity > 0;
+        const images = harvest.harvest_image || [];
+        const hasImage = images.length > 0;
+
+        let bannerHtml;
+        if (hasImage) {
+            bannerHtml = '<div class="listing-banner" style="padding:0;height:180px;overflow:hidden;">' +
+                '<img src="' + CONFIG.API_BASE_URL + images[0].img_url + '" alt="' + harvest.name + '" style="width:100%;height:100%;object-fit:cover;" />' +
+                '<span class="badge" style="position:absolute;top:10px;right:10px;">' + (isAvailable ? 'Available' : 'Sold Out') + '</span>' +
+                (images.length > 1 ? '<span class="badge" style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.5);">📷 ' + images.length + '</span>' : '') +
+            '</div>';
+        } else {
+            bannerHtml = '<div class="listing-banner ' + banner + '">' +
+                '<span class="emoji">' + emoji + '</span>' +
+                '<span class="badge">' + (isAvailable ? 'Available' : 'Sold Out') + '</span>' +
+            '</div>';
+        }
+
+        return '<div class="listing-card">' +
+            bannerHtml +
+            '<div class="listing-body">' +
+                '<h3>' + harvest.name + '</h3>' +
+                '<div class="listing-meta">' +
+                    '<span>📍 ' + location + '</span>' +
+                    '<span>⚖️ ' + qty + ' ' + (harvest.unit || 'units') + ' available</span>' +
+                    '<span>👤 ' + farmerName + '</span>' +
+                '</div>' +
+                '<div class="listing-price-row">' +
+                    '<div class="listing-price">GH₵ ' + price + ' <span>/ ' + (harvest.unit || 'unit') + '</span></div>' +
+                    '<span class="listing-tag ' + (isAvailable ? 'tag-available' : 'tag-limited') + '">' +
+                        (isAvailable ? 'Available' : 'Sold Out') +
+                    '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="listing-footer">' +
+                (Auth.isLoggedIn()
+                    ? '<a href="dashboard.html?order=' + harvest.id + '" class="btn-contact">Place Order</a>'
+                    : '<a href="login.html" class="btn-contact">Login to Order</a>') +
+                '<a href="#" class="btn-details" onclick="viewDetails(' + harvest.id + '); return false;">View Details</a>' +
+            '</div>' +
+        '</div>';
+    }
+
+    async function loadListings(page, append) {
+        const search = document.getElementById('searchInput').value.trim();
+        const category = document.getElementById('categoryFilter').value;
+        const region = document.getElementById('regionFilter').value;
+
+        const params = { page, limit: LIMIT };
+        if (search) params.search = search;
+        if (category) params.category = category;
+        if (region) params.location = region;
+
+        const grid = document.querySelector('.listings-grid');
+        const countEl = document.querySelector('.listings-count');
+
+        if (!append) {
+            grid.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">Loading listings...</div>';
+        }
+
+        try {
+            const result = await API.searchMarketplace(params);
+            const listings = result.data || [];
+            totalPages = result.meta ? result.meta.totalPages : 1;
+            const total = result.meta ? result.meta.total : listings.length;
+
+            if (!append) grid.innerHTML = '';
+
+            if (listings.length === 0 && !append) {
+                grid.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted); grid-column: 1/-1;">' +
+                    '<h3>No listings found</h3><p>Try adjusting your search or filters.</p></div>';
+            } else {
+                listings.forEach(h => {
+                    grid.insertAdjacentHTML('beforeend', createListingCard(h));
+                });
+            }
+
+            const showing = grid.querySelectorAll('.listing-card').length;
+            countEl.textContent = 'Showing ' + showing + ' of ' + total + ' listings';
+
+            // Hide load more if no more pages
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (currentPage >= totalPages) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'inline-block';
+            }
+        } catch (err) {
+            // Backend offline — fall back to client-side demo search
+            const demo = searchDemoListings(search, category, region, page);
+            totalPages = demo.totalPages;
+
+            if (!append) grid.innerHTML = '';
+
+            if (demo.listings.length === 0 && !append) {
+                grid.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted); grid-column: 1/-1;">' +
+                    '<h3>No listings found</h3><p>Try adjusting your search or filters.</p></div>';
+            } else {
+                demo.listings.forEach(h => grid.insertAdjacentHTML('beforeend', createListingCard(h)));
+            }
+
+            const showing = grid.querySelectorAll('.listing-card').length;
+            countEl.textContent = 'Showing ' + showing + ' of ' + demo.total + ' listings (demo)';
+
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            loadMoreBtn.style.display = currentPage >= totalPages ? 'none' : 'inline-block';
+        }
+    }
+
+    let searchTimer = null;
+    function debouncedSearch() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => searchListings(), 300);
+    }
+
+    function searchListings() {
+        currentPage = 1;
+        loadListings(1, false);
+    }
+
+    function loadMore() {
+        currentPage++;
+        loadListings(currentPage, true);
+    }
+
+    async function viewDetails(id) {
+        const modal = document.getElementById('detailModal');
+        const content = document.getElementById('modalContent');
+        content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Loading details...</div>';
+        modal.classList.add('show');
+
+        try {
+            const h = await API.getListingDetail(id);
+            const price = Number(h.unit_price).toLocaleString();
+            const farmer = h.user || {};
+            const rating = h.farmer_rating || {};
+            const ratingText = rating.avg ? rating.avg.toFixed(1) + '/5 (' + rating.count + ' reviews)' : 'No reviews yet';
+            const initials = (farmer.full_name || 'NA').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+
+            const imgs = h.harvest_image || [];
+            let imgsHtml = '';
+            if (imgs.length > 0) {
+                imgsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.5rem;margin-bottom:1rem;">';
+                imgs.forEach(img => {
+                    imgsHtml += '<div style="border-radius:10px;overflow:hidden;aspect-ratio:1;background:#f5f5f5;"><img src="' + CONFIG.API_BASE_URL + img.img_url + '" alt="" style="width:100%;height:100%;object-fit:cover;" /></div>';
+                });
+                imgsHtml += '</div>';
+            }
+
+            content.innerHTML =
+                '<h3>' + h.name + '</h3>' +
+                imgsHtml +
+                '<div class="detail-price">GH₵ ' + price + ' <span style="font-size:0.9rem;color:var(--text-muted);font-family:DM Sans,sans-serif;">/ ' + (h.unit || 'unit') + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">' + h.category + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Available</span><span class="detail-value">' + Number(h.quantity).toLocaleString() + ' ' + (h.unit || 'units') + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">' + (h.location || farmer.location || 'Ghana') + '</span></div>' +
+                (h.description ? '<div class="detail-row" style="flex-direction:column;"><span class="detail-label" style="margin-bottom:0.3rem;">Description</span><span class="detail-value" style="text-align:left;font-weight:400;">' + h.description + '</span></div>' : '') +
+                '<div style="margin-top:1.2rem;padding:1rem;background:var(--cream);border-radius:10px;display:flex;align-items:center;gap:1rem;">' +
+                    '<div style="width:44px;height:44px;border-radius:50%;background:var(--green-dark);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">' + initials + '</div>' +
+                    '<div><div style="font-weight:600;color:var(--green-dark);">' + (farmer.full_name || 'Farmer') + '</div>' +
+                    '<div style="font-size:0.85rem;color:var(--text-muted);">' + (farmer.location || '') + ' &middot; ' + ratingText + '</div></div>' +
+                '</div>' +
+                '<div class="detail-actions">' +
+                    (Auth.isLoggedIn()
+                        ? '<a href="dashboard.html?order=' + h.id + '" class="btn-order">Place Order</a>' +
+                          '<a href="chat.html?user=' + farmer.id + '" class="btn-msg">Message Farmer</a>'
+                        : '<a href="login.html" class="btn-order">Login to Order</a>' +
+                          '<a href="login.html" class="btn-msg">Login to Message</a>') +
+                '</div>';
+        } catch (err) {
+            // Try demo data fallback
+            const h = DEMO_LISTINGS.find(l => l.id === id);
+            if (h) {
+                const price    = Number(h.unit_price).toLocaleString();
+                const farmer   = h.user || {};
+                const rating   = h.farmer_rating || {};
+                const ratingText = rating.avg ? rating.avg.toFixed(1) + '/5 (' + rating.count + ' reviews)' : 'No reviews yet';
+                const initials = (farmer.full_name || 'NA').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+                content.innerHTML =
+                    '<h3>' + h.name + '</h3>' +
+                    '<div class="detail-price">GH₵ ' + price + ' <span style="font-size:0.9rem;color:var(--text-muted);font-family:DM Sans,sans-serif;">/ ' + (h.unit || 'unit') + '</span></div>' +
+                    '<div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">' + h.category + '</span></div>' +
+                    '<div class="detail-row"><span class="detail-label">Available</span><span class="detail-value">' + Number(h.quantity).toLocaleString() + ' ' + (h.unit || 'units') + '</span></div>' +
+                    '<div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">' + (h.location || farmer.location || 'Ghana') + '</span></div>' +
+                    (h.description ? '<div class="detail-row" style="flex-direction:column;"><span class="detail-label" style="margin-bottom:0.3rem;">Description</span><span class="detail-value" style="text-align:left;font-weight:400;">' + h.description + '</span></div>' : '') +
+                    '<div style="margin-top:1.2rem;padding:1rem;background:var(--cream);border-radius:10px;display:flex;align-items:center;gap:1rem;">' +
+                        '<div style="width:44px;height:44px;border-radius:50%;background:var(--green-dark);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;">' + initials + '</div>' +
+                        '<div><div style="font-weight:600;color:var(--green-dark);">' + (farmer.full_name || 'Farmer') + '</div>' +
+                        '<div style="font-size:0.85rem;color:var(--text-muted);">' + (farmer.location || '') + ' &middot; ' + ratingText + '</div></div>' +
+                    '</div>' +
+                    '<div class="detail-actions">' +
+                        '<a href="login.html" class="btn-order">Login to Order</a>' +
+                        '<a href="login.html" class="btn-msg">Login to Message</a>' +
+                    '</div>';
+            } else {
+                content.innerHTML = '<div style="text-align:center;padding:2rem;"><h3 style="color:var(--green-dark);">Could not load details</h3><p style="color:var(--text-muted);">' + (err.message || 'Unknown error') + '</p><button class="btn-msg" onclick="closeModal()" style="margin-top:1rem;">Close</button></div>';
+            }
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('detailModal').classList.remove('show');
+    }
+
+    // Load categories from backend into the filter dropdown
+    async function loadCategories() {
+        try {
+            const categories = await API.getCategories();
+            const select = document.getElementById('categoryFilter');
+            // Keep the "All Crops" option, replace the rest
+            select.innerHTML = '<option value="">All Crops</option>';
+            categories.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.category;
+                opt.textContent = c.category;
+                select.appendChild(opt);
+            });
+        } catch (e) {
+            // Keep the hardcoded options as fallback
+        }
+    }
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCategories();
+        loadListings(1, false);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages — Agriconnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        .chat-page{max-width:1100px;margin:0 auto;padding:1rem 5%;height:calc(100vh - 72px - 2rem);display:flex;flex-direction:column;}
+        .chat-container{flex:1;display:flex;border-radius:16px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.08);background:#fff;min-height:0;}
+        /* Sidebar */
+        .chat-sidebar{width:320px;border-right:1px solid #eee;display:flex;flex-direction:column;flex-shrink:0;background:#fafaf7;}
+        .chat-sidebar-header{padding:1.2rem;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;}
+        .chat-sidebar-header h3{font-family:'Playfair Display',serif;color:var(--green-dark);font-size:1.15rem;margin:0;}
+        .chat-search{padding:0.6rem 1rem;border-bottom:1px solid #eee;}
+        .chat-search input{width:100%;padding:0.55rem 0.8rem;border:1px solid #ddd;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.85rem;box-sizing:border-box;background:#fff;}
+        .chat-search input:focus{border-color:var(--green-mid);outline:none;}
+        .room-list{flex:1;overflow-y:auto;list-style:none;margin:0;padding:0;}
+        .room-item{padding:0.9rem 1rem;display:flex;gap:0.8rem;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background 0.15s;align-items:center;}
+        .room-item:hover{background:#f0efe8;}
+        .room-item.active{background:var(--cream);border-left:3px solid var(--green-mid);}
+        .room-avatar{width:42px;height:42px;border-radius:50%;background:var(--green-dark);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;}
+        .room-info{flex:1;min-width:0;}
+        .room-name{font-weight:600;color:var(--green-dark);font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .room-preview{font-size:0.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:0.15rem;}
+        .room-meta{display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;flex-shrink:0;}
+        .room-time{font-size:0.7rem;color:var(--text-muted);}
+        .unread-badge{background:var(--green-mid);color:#fff;font-size:0.65rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+        .empty-rooms{text-align:center;padding:3rem 1.5rem;color:var(--text-muted);}
+        .empty-rooms h4{font-family:'Playfair Display',serif;color:var(--green-dark);margin-bottom:0.4rem;font-size:1rem;}
+        /* Main chat area */
+        .chat-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+        .chat-header{padding:1rem 1.2rem;border-bottom:1px solid #eee;display:flex;align-items:center;gap:0.8rem;background:#fff;}
+        .chat-header-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-dark);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;}
+        .chat-header-name{font-weight:600;color:var(--green-dark);font-size:0.95rem;}
+        .chat-header-status{font-size:0.75rem;color:var(--text-muted);}
+        .chat-header .back-btn{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--green-dark);padding:0 0.4rem;}
+        .chat-messages{flex:1;overflow-y:auto;padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.4rem;background:#f9f9f6;}
+        .chat-messages .date-sep{text-align:center;font-size:0.75rem;color:var(--text-muted);padding:0.6rem 0;font-weight:500;}
+        .msg-row{display:flex;flex-direction:column;max-width:75%;}
+        .msg-row.sent{align-self:flex-end;align-items:flex-end;}
+        .msg-row.received{align-self:flex-start;align-items:flex-start;}
+        .msg-bubble{padding:0.6rem 0.9rem;border-radius:14px;font-size:0.88rem;line-height:1.4;word-wrap:break-word;position:relative;}
+        .msg-row.sent .msg-bubble{background:var(--green-mid);color:#fff;border-bottom-right-radius:4px;}
+        .msg-row.received .msg-bubble{background:#fff;color:var(--text-dark);border:1px solid #eee;border-bottom-left-radius:4px;}
+        .msg-time{font-size:0.65rem;color:var(--text-muted);margin-top:0.15rem;padding:0 0.2rem;}
+        .msg-row.sent .msg-time{color:rgba(255,255,255,0.5);}
+        .msg-status{font-size:0.6rem;color:var(--text-muted);margin-top:0.1rem;}
+        .typing-indicator{font-size:0.8rem;color:var(--text-muted);font-style:italic;padding:0.3rem 0.5rem;}
+        .chat-input-area{padding:0.8rem 1.2rem;border-top:1px solid #eee;display:flex;gap:0.5rem;align-items:flex-end;background:#fff;}
+        .chat-input-area textarea{flex:1;padding:0.6rem 0.8rem;border:1px solid #ddd;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.88rem;resize:none;max-height:100px;min-height:38px;line-height:1.4;box-sizing:border-box;}
+        .chat-input-area textarea:focus{border-color:var(--green-mid);outline:none;}
+        .send-btn{width:40px;height:40px;border-radius:50%;background:var(--green-mid);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;transition:background 0.2s;}
+        .send-btn:hover{background:var(--green-dark);}
+        .send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+        /* No chat selected placeholder */
+        .chat-placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted);text-align:center;padding:2rem;}
+        .chat-placeholder h3{font-family:'Playfair Display',serif;color:var(--green-dark);font-size:1.3rem;margin-bottom:0.5rem;}
+        /* Toast */
+        .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green-dark);color:#fff;padding:0.9rem 1.5rem;border-radius:10px;font-size:0.9rem;z-index:2000;transform:translateY(100px);opacity:0;transition:all 0.3s ease;font-family:'DM Sans',sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+        .toast.show{transform:translateY(0);opacity:1;}
+        .toast.error{background:#dc3545;}
+        /* Mobile */
+        @media(max-width:768px){
+            .chat-sidebar{width:100%;position:absolute;inset:0;z-index:10;background:#fafaf7;}
+            .chat-container{position:relative;}
+            .chat-sidebar.hidden{display:none;}
+            .chat-header .back-btn{display:block;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <h1><a href="index.html">Agriconnect</a></h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="farmers.html">Farmers</a></li>
+            <li><a href="markets.html">Markets</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </nav>
+    <button class="hamburger" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<div class="chat-page">
+    <div class="chat-container">
+        <!-- SIDEBAR: Room List -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <div class="chat-sidebar-header">
+                <h3>Messages</h3>
+            </div>
+            <div class="chat-search">
+                <input type="text" id="roomSearch" placeholder="Search conversations..." oninput="filterRooms(this.value)" />
+            </div>
+            <ul class="room-list" id="roomList">
+                <li class="empty-rooms" id="roomsEmpty">
+                    <h4>No messages yet</h4>
+                    <p>Start a conversation from the marketplace.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN: Chat Area -->
+        <div class="chat-main" id="chatMain">
+            <div class="chat-placeholder" id="chatPlaceholder">
+                <div style="font-size:3rem;margin-bottom:1rem;">💬</div>
+                <h3>Your Messages</h3>
+                <p>Select a conversation to start chatting,<br>or message a farmer from the marketplace.</p>
+            </div>
+
+            <!-- Active chat (hidden by default) -->
+            <div id="activeChat" style="display:none;flex:1;flex-direction:column;">
+                <div class="chat-header" id="chatHeader">
+                    <button class="back-btn" onclick="showSidebar()">&#8592;</button>
+                    <div class="chat-header-avatar" id="chatAvatar">NA</div>
+                    <div>
+                        <div class="chat-header-name" id="chatName">Select a chat</div>
+                        <div class="chat-header-status" id="chatStatus"></div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="typing-indicator" id="typingIndicator" style="display:none;"></div>
+                <div class="chat-input-area">
+                    <textarea id="msgInput" rows="1" placeholder="Type a message..." onkeydown="handleInputKey(event)" oninput="handleTyping()"></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">&#9654;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ─── Auth Guard ─────────────────────────────
+    if (!Auth.requireAuth()) throw new Error('Not authenticated');
+    const currentUser = Auth.getUser();
+
+    function showToast(msg, type = '') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast show ' + type;
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // ─── State ──────────────────────────────────
+    let rooms = [];
+    let activeRoomId = null;
+    let activeRecipient = null;
+    let socket = null;
+    let typingTimeout = null;
+
+    // ─── Socket.IO Connection ───────────────────
+    function connectSocket() {
+        socket = io(CONFIG.API_BASE_URL + '/chat', { transports: ['websocket', 'polling'] });
+
+        socket.on('connect', () => {
+            socket.emit('authenticate', { token: Auth.getToken() });
+        });
+
+        socket.on('authenticated', () => {
+            console.log('Chat socket authenticated');
+        });
+
+        socket.on('new_message', (msg) => {
+            // If message is for the active room, append it
+            if (activeRoomId && msg.chat_room_id === activeRoomId) {
+                appendMessage(msg);
+                scrollToBottom();
+                // Mark as read
+                socket.emit('mark_read', { message_id: msg.id });
+            }
+            // Update room list
+            loadRooms();
+        });
+
+        socket.on('message_sent', (msg) => {
+            appendMessage(msg);
+            scrollToBottom();
+        });
+
+        socket.on('message_delivered', (data) => {
+            const el = document.querySelector('[data-msg-id="' + data.message_id + '"] .msg-status');
+            if (el) el.textContent = 'Delivered';
+        });
+
+        socket.on('message_read', (data) => {
+            const el = document.querySelector('[data-msg-id="' + data.message_id + '"] .msg-status');
+            if (el) el.textContent = 'Read';
+        });
+
+        socket.on('user_typing', (data) => {
+            if (activeRoomId && data.chat_room_id === activeRoomId) {
+                showTyping();
+            }
+        });
+
+        socket.on('error', (data) => {
+            showToast(data.message || 'Connection error', 'error');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Chat socket disconnected');
+        });
+    }
+
+    // ─── Room List ──────────────────────────────
+    async function loadRooms() {
+        try {
+            rooms = await API.getChatRooms();
+            renderRooms(rooms);
+        } catch (err) {
+            document.getElementById('roomList').innerHTML =
+                '<li class="empty-rooms"><h4>Could not load messages</h4><p>' + (err.message || '') + '</p></li>';
+        }
+    }
+
+    function renderRooms(roomsToRender) {
+        const list = document.getElementById('roomList');
+        if (!roomsToRender || roomsToRender.length === 0) {
+            list.innerHTML = '<li class="empty-rooms" id="roomsEmpty"><h4>No messages yet</h4><p>Start a conversation from the marketplace.</p></li>';
+            return;
+        }
+
+        list.innerHTML = '';
+        roomsToRender.forEach(room => {
+            const other = getOtherUser(room);
+            const initials = (other.full_name || 'NA').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+            const lastMsg = room.last_message;
+            const preview = lastMsg ? (lastMsg.sender_id === currentUser.id ? 'You: ' : '') + truncate(lastMsg.text, 35) : 'No messages yet';
+            const time = lastMsg && lastMsg.created_at ? formatTime(lastMsg.created_at) : '';
+            const unread = room.unread_count || 0;
+
+            const li = document.createElement('li');
+            li.className = 'room-item' + (room.id === activeRoomId ? ' active' : '');
+            li.onclick = () => openRoom(room);
+            li.innerHTML =
+                '<div class="room-avatar">' + initials + '</div>' +
+                '<div class="room-info">' +
+                    '<div class="room-name">' + (other.full_name || 'User') + '</div>' +
+                    '<div class="room-preview">' + preview + '</div>' +
+                '</div>' +
+                '<div class="room-meta">' +
+                    '<span class="room-time">' + time + '</span>' +
+                    (unread > 0 ? '<span class="unread-badge">' + unread + '</span>' : '') +
+                '</div>';
+            list.appendChild(li);
+        });
+    }
+
+    function filterRooms(query) {
+        if (!query) return renderRooms(rooms);
+        const q = query.toLowerCase();
+        renderRooms(rooms.filter(r => {
+            const other = getOtherUser(r);
+            return (other.full_name || '').toLowerCase().includes(q);
+        }));
+    }
+
+    function getOtherUser(room) {
+        if (room.user_chat_room_user1Touser && room.user_chat_room_user1Touser.id !== currentUser.id) {
+            return room.user_chat_room_user1Touser;
+        }
+        return room.user_chat_room_user2Touser || room.user_chat_room_user1Touser || {};
+    }
+
+    // ─── Open Room ──────────────────────────────
+    async function openRoom(room) {
+        activeRoomId = room.id;
+        activeRecipient = getOtherUser(room);
+
+        const initials = (activeRecipient.full_name || 'NA').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        document.getElementById('chatAvatar').textContent = initials;
+        document.getElementById('chatName').textContent = activeRecipient.full_name || 'User';
+        document.getElementById('chatStatus').textContent = '';
+        document.getElementById('chatPlaceholder').style.display = 'none';
+        document.getElementById('activeChat').style.display = 'flex';
+        document.getElementById('chatMessages').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Loading messages...</div>';
+
+        // Highlight active room
+        document.querySelectorAll('.room-item').forEach(el => el.classList.remove('active'));
+        renderRooms(rooms);
+
+        // Hide sidebar on mobile
+        if (window.innerWidth <= 768) {
+            document.getElementById('chatSidebar').classList.add('hidden');
+        }
+
+        // Load messages
+        try {
+            const data = await API.getRoomMessages(room.id);
+            const msgs = data.messages || [];
+            document.getElementById('chatMessages').innerHTML = '';
+
+            if (msgs.length === 0) {
+                document.getElementById('chatMessages').innerHTML =
+                    '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.9rem;">No messages yet. Say hello!</div>';
+            } else {
+                let lastDate = '';
+                msgs.forEach(msg => {
+                    const msgDate = formatDate(msg.created_at);
+                    if (msgDate !== lastDate) {
+                        lastDate = msgDate;
+                        const sep = document.createElement('div');
+                        sep.className = 'date-sep';
+                        sep.textContent = msgDate;
+                        document.getElementById('chatMessages').appendChild(sep);
+                    }
+                    appendMessage(msg);
+                });
+                scrollToBottom();
+            }
+
+            // Mark unread messages as read
+            msgs.filter(m => m.recipient_id === currentUser.id && !m.read).forEach(m => {
+                if (socket && socket.connected) socket.emit('mark_read', { message_id: m.id });
+            });
+            loadRooms(); // Refresh unread counts
+        } catch (err) {
+            document.getElementById('chatMessages').innerHTML =
+                '<div style="text-align:center;padding:2rem;color:#dc3545;">Could not load messages</div>';
+        }
+
+        document.getElementById('msgInput').focus();
+    }
+
+    // ─── Messages ───────────────────────────────
+    function appendMessage(msg) {
+        const container = document.getElementById('chatMessages');
+        // Remove "no messages" placeholder
+        const placeholder = container.querySelector('[style*="Say hello"]');
+        if (placeholder) placeholder.remove();
+
+        // Check for duplicate
+        if (container.querySelector('[data-msg-id="' + msg.id + '"]')) return;
+
+        const isSent = msg.sender_id === currentUser.id;
+        const div = document.createElement('div');
+        div.className = 'msg-row ' + (isSent ? 'sent' : 'received');
+        div.setAttribute('data-msg-id', msg.id);
+
+        let statusHtml = '';
+        if (isSent) {
+            statusHtml = '<div class="msg-status">' + (msg.read ? 'Read' : (msg.received ? 'Delivered' : 'Sent')) + '</div>';
+        }
+
+        div.innerHTML =
+            '<div class="msg-bubble">' + escapeHtml(msg.text) + '</div>' +
+            '<span class="msg-time">' + formatMsgTime(msg.created_at) + '</span>' +
+            statusHtml;
+        container.appendChild(div);
+    }
+
+    function scrollToBottom() {
+        const el = document.getElementById('chatMessages');
+        el.scrollTop = el.scrollHeight;
+    }
+
+    // ─── Send Message ───────────────────────────
+    function sendMessage() {
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (!text || !activeRecipient || !socket) return;
+
+        socket.emit('send_message', {
+            recipient_id: activeRecipient.id,
+            text: text,
+        });
+
+        input.value = '';
+        input.style.height = 'auto';
+        input.focus();
+    }
+
+    function handleInputKey(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+        // Auto-resize textarea
+        const el = e.target;
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    }
+
+    function handleTyping() {
+        if (!socket || !activeRoomId || !activeRecipient) return;
+        socket.emit('typing', { chat_room_id: activeRoomId, recipient_id: activeRecipient.id });
+    }
+
+    function showTyping() {
+        const el = document.getElementById('typingIndicator');
+        el.textContent = (activeRecipient ? activeRecipient.full_name : 'User') + ' is typing...';
+        el.style.display = 'block';
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => { el.style.display = 'none'; }, 2500);
+    }
+
+    // ─── Mobile ─────────────────────────────────
+    function showSidebar() {
+        document.getElementById('chatSidebar').classList.remove('hidden');
+    }
+
+    // ─── Start chat with specific user ──────────
+    async function startChatWith(userId) {
+        try {
+            const room = await API.createChatRoom(userId);
+            await loadRooms();
+            // Find the room in our list
+            const found = rooms.find(r => r.id === room.id);
+            if (found) {
+                openRoom(found);
+            } else {
+                // Room just created, reload and try again
+                await loadRooms();
+                const retry = rooms.find(r => r.id === room.id);
+                if (retry) openRoom(retry);
+            }
+        } catch (err) {
+            showToast(err.message || 'Could not start conversation', 'error');
+        }
+    }
+
+    // ─── Helpers ────────────────────────────────
+    function truncate(str, len) {
+        return str && str.length > len ? str.substring(0, len) + '...' : (str || '');
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function formatTime(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        const now = new Date();
+        if (d.toDateString() === now.toDateString()) {
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+        return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+
+    function formatMsgTime(dateStr) {
+        if (!dateStr) return '';
+        return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        const now = new Date();
+        if (d.toDateString() === now.toDateString()) return 'Today';
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+        return d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+
+    // ─── Init ───────────────────────────────────
+    connectSocket();
+    loadRooms();
+
+    // Check for ?user=<id> param (from marketplace "Message Farmer")
+    (function checkChatParam() {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('user');
+        if (userId) {
+            startChatWith(parseInt(userId));
+            window.history.replaceState({}, '', 'chat.html');
+        }
+    })();
+</script>
+</body>
+</html>

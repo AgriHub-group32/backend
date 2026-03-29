@@ -13,7 +13,7 @@ async function bootstrap() {
   // Static assets: uploads and frontend
   const root = process.cwd();
   app.useStaticAssets(join(root, 'uploads'), { prefix: '/uploads' });
-  app.useStaticAssets(join(root, 'frontend', 'frontend'), {
+  app.useStaticAssets(join(root, 'public'), {
     prefix: '/',
     index: 'index.html',
   });
