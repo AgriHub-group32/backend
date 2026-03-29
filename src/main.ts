@@ -9,9 +9,18 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(new AppExceptionFilter());
-  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
-  app.useStaticAssets(join(process.cwd(), 'frontend', 'frontend'), { prefix: '/' });
+
+  // Static assets: uploads and frontend
+  const root = process.cwd();
+  app.useStaticAssets(join(root, 'uploads'), { prefix: '/uploads' });
+  app.useStaticAssets(join(root, 'frontend', 'frontend'), {
+    prefix: '/',
+    index: 'index.html',
+  });
+
   app.enableCors();
-  await app.listen(3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`Server running on http://localhost:${port}`);
 }
 bootstrap();
