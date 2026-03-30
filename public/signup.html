@@ -571,12 +571,11 @@
             // Success
             for (let i = 0; i < 6; i++) document.getElementById('otp'+i).classList.add('success-box');
             status.className = 'otp-status success';
-            status.textContent = '✅ Code verified successfully!';
+            status.textContent = '✅ Code verified! Redirecting to dashboard...';
             clearInterval(otpTimer);
             setTimeout(() => {
-                document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('successScreen').classList.add('show');
-            }, 800);
+                window.location.href = 'dashboard.html';
+            }, 1000);
         } else {
             // Wrong code
             for (let i = 0; i < 6; i++) {
