@@ -121,31 +121,31 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>First Name</label>
+                        <label for="fname">First Name</label>
                         <input type="text" id="fname" placeholder="e.g. Kwame" />
                         <span class="error-msg" id="fnameErr">Please enter your first name.</span>
                     </div>
                     <div class="form-group">
-                        <label>Last Name</label>
+                        <label for="lname">Last Name</label>
                         <input type="text" id="lname" placeholder="e.g. Asante" />
                         <span class="error-msg" id="lnameErr">Please enter your last name.</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label for="email">Email Address</label>
                     <input type="email" id="email" placeholder="you@example.com" />
                     <span class="error-msg" id="emailErr">Please enter a valid email address.</span>
                 </div>
 
                 <div class="form-group">
-                    <label>Phone Number</label>
+                    <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" placeholder="+233 XX XXX XXXX" />
                     <span class="error-msg" id="phoneErr">Please enter your phone number.</span>
                 </div>
 
                 <div class="form-group">
-                    <label>Region</label>
+                    <label for="region">Region</label>
                     <select id="region">
                         <option value="">Select your region</option>
                         <option>Ashanti</option>
@@ -176,13 +176,13 @@
             <!-- STEP 2: FARM / BUSINESS DETAILS -->
             <div class="form-step" id="step2">
                 <div class="form-group">
-                    <label id="bizLabel">Farm Name</label>
+                    <label id="bizLabel" for="bizName">Farm Name</label>
                     <input type="text" id="bizName" placeholder="e.g. Asante Family Farm" />
                     <span class="error-msg" id="bizErr">Please enter your farm or business name.</span>
                 </div>
 
                 <div class="form-group">
-                    <label id="cropLabel">Primary Crop / Product</label>
+                    <label id="cropLabel" for="cropType">Primary Crop / Product</label>
                     <select id="cropType">
                         <option value="">Select your main crop</option>
                         <option>Maize & Cereals</option>
@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="form-group" id="farmSizeGroup">
-                    <label>Farm Size</label>
+                    <label for="farmSize">Farm Size</label>
                     <select id="farmSize">
                         <option value="">Select farm size</option>
                         <option>Less than 1 acre</option>
@@ -213,7 +213,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>How did you hear about us?</label>
+                    <label for="referral">How did you hear about us?</label>
                     <select id="referral">
                         <option value="">Select an option</option>
                         <option>Friend or Family</option>
@@ -234,10 +234,10 @@
             <!-- STEP 3: PASSWORD & CONFIRM -->
             <div class="form-step" id="step3">
                 <div class="form-group">
-                    <label>Create Password</label>
+                    <label for="pw1">Create Password</label>
                     <div class="password-wrap">
                         <input type="password" id="pw1" placeholder="At least 8 characters" oninput="checkStrength()" />
-                        <button class="toggle-pw" type="button" onclick="togglePw('pw1', this)"><i class="fa-solid fa-eye"></i></button>
+                        <button class="toggle-pw" type="button" onclick="togglePw('pw1', this)" aria-label="Toggle password visibility"><i class="fa-solid fa-eye"></i></button>
                     </div>
                     <div class="pw-strength">
                         <div class="pw-bar" id="bar1"></div>
@@ -250,10 +250,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Confirm Password</label>
+                    <label for="pw2">Confirm Password</label>
                     <div class="password-wrap">
                         <input type="password" id="pw2" placeholder="Re-enter your password" />
-                        <button class="toggle-pw" type="button" onclick="togglePw('pw2', this)"><i class="fa-solid fa-eye"></i></button>
+                        <button class="toggle-pw" type="button" onclick="togglePw('pw2', this)" aria-label="Toggle confirm password visibility"><i class="fa-solid fa-eye"></i></button>
                     </div>
                     <span class="error-msg" id="pw2Err">Passwords do not match.</span>
                 </div>
@@ -287,13 +287,13 @@
                 </div>
 
                 <div class="otp-boxes">
-                    <input class="otp-box" type="text" maxlength="1" id="otp0" oninput="otpInput(0)" onkeydown="otpKey(event,0)" />
-                    <input class="otp-box" type="text" maxlength="1" id="otp1" oninput="otpInput(1)" onkeydown="otpKey(event,1)" />
-                    <input class="otp-box" type="text" maxlength="1" id="otp2" oninput="otpInput(2)" onkeydown="otpKey(event,2)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp0" aria-label="OTP digit 1" oninput="otpInput(0)" onkeydown="otpKey(event,0)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp1" aria-label="OTP digit 2" oninput="otpInput(1)" onkeydown="otpKey(event,1)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp2" aria-label="OTP digit 3" oninput="otpInput(2)" onkeydown="otpKey(event,2)" />
                     <span class="otp-dash">&#8212;</span>
-                    <input class="otp-box" type="text" maxlength="1" id="otp3" oninput="otpInput(3)" onkeydown="otpKey(event,3)" />
-                    <input class="otp-box" type="text" maxlength="1" id="otp4" oninput="otpInput(4)" onkeydown="otpKey(event,4)" />
-                    <input class="otp-box" type="text" maxlength="1" id="otp5" oninput="otpInput(5)" onkeydown="otpKey(event,5)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp3" aria-label="OTP digit 4" oninput="otpInput(3)" onkeydown="otpKey(event,3)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp4" aria-label="OTP digit 5" oninput="otpInput(4)" onkeydown="otpKey(event,4)" />
+                    <input class="otp-box" type="text" maxlength="1" id="otp5" aria-label="OTP digit 6" oninput="otpInput(5)" onkeydown="otpKey(event,5)" />
                 </div>
 
                 <div class="otp-status" id="otpStatus"></div>

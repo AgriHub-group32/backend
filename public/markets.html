@@ -77,7 +77,7 @@
                 <span><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input type="text" id="searchInput" placeholder="Search crops, farmers, regions..." oninput="debouncedSearch()" onkeydown="if(event.key==='Enter') searchListings()" />
             </div>
-            <select class="filter-select" id="categoryFilter" onchange="searchListings()">
+            <select class="filter-select" id="categoryFilter" aria-label="Filter by crop category" onchange="searchListings()">
                 <option value="">All Crops</option>
                 <option>Maize & Cereals</option>
                 <option>Tomatoes</option>
@@ -89,7 +89,7 @@
                 <option>Fruits</option>
                 <option>Peppers & Spices</option>
             </select>
-            <select class="filter-select" id="regionFilter" onchange="searchListings()">
+            <select class="filter-select" id="regionFilter" aria-label="Filter by region" onchange="searchListings()">
                 <option value="">All Regions</option>
                 <option>Ashanti</option>
                 <option>Greater Accra</option>

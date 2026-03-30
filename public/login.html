@@ -67,7 +67,7 @@
                 <div class="password-wrap">
                     <input type="password" id="password" placeholder="Enter your password"
                         oninput="clearAlert()" onkeydown="if(event.key==='Enter') attemptLogin()" />
-                    <button class="toggle-pw" type="button" onclick="togglePw()"><i class="fa-solid fa-eye"></i></button>
+                    <button class="toggle-pw" type="button" onclick="togglePw()" aria-label="Toggle password visibility"><i class="fa-solid fa-eye"></i></button>
                 </div>
                 <span class="error-msg" id="pwErr">Please enter your password.</span>
             </div>
