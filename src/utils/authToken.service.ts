@@ -23,7 +23,7 @@ export class AuthTokenService extends PassportStrategy(Strategy) {
   async genToken(userId: number, type: AuthTokenType = "refresh") {
     return type === "refresh"
       ? await this.jwtService.signAsync({ sub: userId }, { expiresIn: "30d" })
-      : await this.jwtService.signAsync({ sub: userId }, { expiresIn: "10m" });
+      : await this.jwtService.signAsync({ sub: userId }, { expiresIn: "7d" });
   }
 
   async validate(payload: { sub: number }) {

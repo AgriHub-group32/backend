@@ -30,7 +30,7 @@ let AuthTokenService = class AuthTokenService extends (0, passport_1.PassportStr
     async genToken(userId, type = "refresh") {
         return type === "refresh"
             ? await this.jwtService.signAsync({ sub: userId }, { expiresIn: "30d" })
-            : await this.jwtService.signAsync({ sub: userId }, { expiresIn: "10m" });
+            : await this.jwtService.signAsync({ sub: userId }, { expiresIn: "7d" });
     }
     async validate(payload) {
         return await this.dbClient.user.findUnique({ where: { id: payload.sub } });

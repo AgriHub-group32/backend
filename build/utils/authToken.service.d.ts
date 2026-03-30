@@ -16,8 +16,8 @@ export declare class AuthTokenService extends AuthTokenService_base {
         sub: number;
     }): Promise<{
         id: number;
-        full_name: string;
         email: string;
+        full_name: string;
         passwd: string;
         profile: string | null;
         phone: string | null;
