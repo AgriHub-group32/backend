@@ -18,6 +18,10 @@ let ChatService = class ChatService {
     }
     async findOrCreateRoom(user1Id, user2Id) {
         const [smallId, bigId] = user1Id < user2Id ? [user1Id, user2Id] : [user2Id, user1Id];
+        const include = {
+            user_chat_room_user1Touser: { select: { id: true, full_name: true, profile: true } },
+            user_chat_room_user2Touser: { select: { id: true, full_name: true, profile: true } },
+        };
         let room = await this.db.chat_room.findFirst({
             where: {
                 OR: [
@@ -25,10 +29,12 @@ let ChatService = class ChatService {
                     { user1: bigId, user2: smallId },
                 ],
             },
+            include,
         });
         if (!room) {
             room = await this.db.chat_room.create({
                 data: { user1: smallId, user2: bigId },
+                include,
             });
         }
         return room;

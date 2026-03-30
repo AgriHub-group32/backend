@@ -414,18 +414,16 @@
     // ─── Start chat with specific user ──────────
     async function startChatWith(userId) {
         try {
+            // createChatRoom now returns full room with user relations
             const room = await API.createChatRoom(userId);
-            await loadRooms();
-            // Find the room in our list
-            const found = rooms.find(r => r.id === room.id);
-            if (found) {
-                openRoom(found);
-            } else {
-                // Room just created, reload and try again
-                await loadRooms();
-                const retry = rooms.find(r => r.id === room.id);
-                if (retry) openRoom(retry);
+            // Add to rooms list if not already there
+            if (!rooms.find(r => r.id === room.id)) {
+                rooms.unshift(room);
             }
+            renderRooms(rooms);
+            openRoom(room);
+            // Refresh room list in background
+            loadRooms();
         } catch (err) {
             showToast(err.message || 'Could not start conversation', 'error');
         }
@@ -473,15 +471,16 @@
 
     // ─── Init ───────────────────────────────────
     connectSocket();
-    loadRooms();
 
     // Check for ?user=<id> param (from marketplace "Message Farmer")
-    (function checkChatParam() {
+    (async function init() {
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('user');
         if (userId) {
-            startChatWith(parseInt(userId));
             window.history.replaceState({}, '', 'chat.html');
+            await startChatWith(parseInt(userId));
+        } else {
+            await loadRooms();
         }
     })();
 </script>

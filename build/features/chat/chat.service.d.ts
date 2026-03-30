@@ -3,10 +3,21 @@ export declare class ChatService {
     private readonly db;
     constructor(db: PrismaService);
     findOrCreateRoom(user1Id: number, user2Id: number): Promise<{
+        user_chat_room_user1Touser: {
+            id: number;
+            full_name: string;
+            profile: string;
+        };
+        user_chat_room_user2Touser: {
+            id: number;
+            full_name: string;
+            profile: string;
+        };
+    } & {
         id: number;
-        created_at: Date | null;
         user1: number;
         user2: number;
+        created_at: Date | null;
     }>;
     getUserRooms(userId: number): Promise<{
         last_message: {
@@ -32,9 +43,9 @@ export declare class ChatService {
             profile: string;
         };
         id: number;
-        created_at: Date | null;
         user1: number;
         user2: number;
+        created_at: Date | null;
     }[]>;
     getRoomMessages(roomId: number, userId: number, page?: number, limit?: number): Promise<{
         messages: ({

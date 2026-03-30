@@ -27,15 +27,26 @@ export declare class ChatController {
             profile: string;
         };
         id: number;
-        created_at: Date | null;
         user1: number;
         user2: number;
+        created_at: Date | null;
     }[]>;
     createRoom(user: user, otherUserId: number): Promise<{
+        user_chat_room_user1Touser: {
+            id: number;
+            full_name: string;
+            profile: string;
+        };
+        user_chat_room_user2Touser: {
+            id: number;
+            full_name: string;
+            profile: string;
+        };
+    } & {
         id: number;
-        created_at: Date | null;
         user1: number;
         user2: number;
+        created_at: Date | null;
     }>;
     getMessages(roomId: number, user: user, page?: string, limit?: string): Promise<{
         messages: ({
