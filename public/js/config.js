@@ -1,5 +1,5 @@
 /**
- * AgriConnect Frontend Configuration
+ * AgriHub Frontend Configuration
  *
  * SINGLE SOURCE for the API base URL.
  * Change this ONE value when deploying to production.

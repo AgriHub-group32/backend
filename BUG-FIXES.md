@@ -1,4 +1,4 @@
-# AgriConnect Backend - Bug Fix Guide
+# AgriHub Backend - Bug Fix Guide
 
 This document provides step-by-step fix instructions for each bug identified in `BUGS.md`.
 

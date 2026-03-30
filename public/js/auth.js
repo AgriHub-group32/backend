@@ -1,5 +1,5 @@
 /**
- * AgriConnect Auth State Management
+ * AgriHub Auth State Management
  *
  * Handles JWT token storage, user session, and auth-aware navigation.
  * Uses localStorage for persistence across page reloads.

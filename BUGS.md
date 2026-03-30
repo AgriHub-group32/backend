@@ -1,4 +1,4 @@
-# AgriConnect Backend - Bug Report
+# AgriHub Backend - Bug Report
 
 ## Summary
 

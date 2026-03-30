@@ -1,5 +1,5 @@
 /**
- * AgriConnect API Service
+ * AgriHub API Service
  *
  * Central module for all backend API calls.
  * Uses CONFIG.API_BASE_URL from config.js (must be loaded first).

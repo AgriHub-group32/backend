@@ -1,5 +1,5 @@
 -- ================================================
--- AgriConnect Database DDL
+-- AgriHub Database DDL
 -- ================================================
 -- Workflow:
 --   1. Edit this file with your DDL changes
